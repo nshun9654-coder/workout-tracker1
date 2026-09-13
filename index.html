@@ -292,6 +292,15 @@
       sessions = Object.values(byDate);
     }
 
+    // merge any sessions that already share the same date (e.g. from before this fix)
+    var mergedByDate = {};
+    var mergedOrder = [];
+    sessions.forEach(function (s) {
+      if (!mergedByDate[s.date]) { mergedByDate[s.date] = { id: s.id, date: s.date, items: [] }; mergedOrder.push(s.date); }
+      mergedByDate[s.date].items = mergedByDate[s.date].items.concat(s.items);
+    });
+    sessions = mergedOrder.map(function (d) { return mergedByDate[d]; });
+
     state = { bodyParts: bps, exercises: exs, splits: splits, sessions: sessions };
   }
 
@@ -410,7 +419,9 @@
       if (validSets.length > 0) items.push({ id: 'it_' + Date.now() + '_' + i, exerciseId: b.exerciseId, sets: validSets });
     });
     if (items.length === 0) { showToast('種目を選んで、重量と回数を入力してください'); return; }
-    state.sessions.push({ id: 'ses_' + Date.now(), date: draft.date, items: items });
+    var existing = state.sessions.find(function (s) { return s.date === draft.date; });
+    if (existing) existing.items = existing.items.concat(items);
+    else state.sessions.push({ id: 'ses_' + Date.now(), date: draft.date, items: items });
     draft.blocks = [emptyBlock()];
     draft.date = todayISO();
     save(); render();
@@ -482,7 +493,10 @@
     var validSets = draft.quickSets.map(function (r) { return { weight: parseFloat(r.weight), reps: parseInt(r.reps, 10) }; })
       .filter(function (s) { return s.weight > 0 && s.reps > 0; });
     if (validSets.length === 0) { showToast('重量と回数を入力してください'); return; }
-    state.sessions.push({ id: 'ses_' + Date.now(), date: draft.quickDate, items: [{ id: 'it_' + Date.now(), exerciseId: ex.id, sets: validSets }] });
+    var newItem = { id: 'it_' + Date.now(), exerciseId: ex.id, sets: validSets };
+    var existing = state.sessions.find(function (s) { return s.date === draft.quickDate; });
+    if (existing) existing.items.push(newItem);
+    else state.sessions.push({ id: 'ses_' + Date.now(), date: draft.quickDate, items: [newItem] });
     draft.quickSets = emptySetRows(3);
     draft.quickDate = todayISO();
     save(); render();
