@@ -75,6 +75,10 @@
   .session-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
   .session-date { font-family: 'Oswald', sans-serif; font-size: 14px; color: #EFEBE3; }
   .session-total { flex: 1; font-size: 11.5px; color: #C89B3C; }
+  .session-top.clickable { cursor: pointer; }
+  .pr-badge { font-size: 10.5px; background: #3A2F14; color: #E8B94D; border: 1px solid #5A4A1F; border-radius: 4px; padding: 2px 7px; white-space: nowrap; }
+  .expand-arrow { color: #6B6660; font-size: 13px; flex-shrink: 0; }
+  .pr-inline { font-size: 10.5px; color: #E8B94D; margin-left: 6px; }
   .item-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-top: 1px solid #262421; }
   .item-row:first-of-type { border-top: none; }
   .item-name { font-size: 12.5px; color: #B5AFA6; width: 92px; flex-shrink: 0; padding-top: 2px; }
@@ -138,7 +142,8 @@
     exMetric: 'e1rm',
     error: null,
     pendingConfirm: null, // { message, action, id }
-    editingItem: null // { sessionId, itemId }
+    editingItem: null, // { sessionId, itemId }
+    expandedSessions: {} // { [sessionId]: true }
   };
   var draft = {
     date: todayISO(),
@@ -193,6 +198,29 @@
   function itemsForBodyPart(bodyPartId) {
     var ids = state.exercises.filter(function (e) { return e.bodyPartId === bodyPartId; }).map(function (e) { return e.id; });
     return itemsForExerciseIds(ids);
+  }
+
+  // best e1RM for an exercise from sessions strictly before the given date
+  function bestE1RMBeforeDate(exerciseId, beforeDate) {
+    var best = 0;
+    state.sessions.forEach(function (s) {
+      if (s.date >= beforeDate) return;
+      s.items.forEach(function (it) {
+        if (it.exerciseId !== exerciseId) return;
+        var v = bestE1RM(it.sets);
+        if (v > best) best = v;
+      });
+    });
+    return best;
+  }
+  // true if this item's best set beats the exercise's prior best (a genuine PR, not the first-ever record)
+  function isItemPR(date, exerciseId, sets) {
+    var prior = bestE1RMBeforeDate(exerciseId, date);
+    if (prior <= 0) return false;
+    return bestE1RM(sets) > prior;
+  }
+  function sessionHasPR(session) {
+    return session.items.some(function (it) { return isItemPR(session.date, it.exerciseId, it.sets); });
   }
 
   function load() {
@@ -705,20 +733,29 @@
       recentSessions.forEach(function (s) {
         var sessionTotal = 0;
         s.items.forEach(function (it) { sessionTotal += totalReps(it.sets); });
-        html += '<div class="session-card"><div class="session-top"><span class="session-date">' + formatDate(s.date) + '</span>' +
-          '<span class="session-total">合計 ' + sessionTotal + '回・' + s.items.length + '種目</span></div>';
-        s.items.forEach(function (it) {
-          var ex = exerciseById(it.exerciseId);
-          if (ui.editingItem && ui.editingItem.sessionId === s.id && ui.editingItem.itemId === it.id) {
-            html += '<div style="padding:6px 0"><div class="item-name" style="width:auto;margin-bottom:6px">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + '</div>' + renderItemEditForm() + '</div>';
-          } else {
-            html += '<div class="item-row"><span class="item-name">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + '</span>' +
-              '<div class="set-chips">' + it.sets.map(function (st) { return '<span class="set-chip">' + st.weight + 'kg×' + st.reps + '</span>'; }).join('') + '</div>' +
-              '<button class="delete-btn" data-action="start-edit-item" data-session="' + s.id + '" data-item="' + it.id + '">✎</button>' +
-              '<button class="delete-btn" data-action="delete-session-item" data-session="' + s.id + '" data-item="' + it.id + '">✕</button></div>';
-          }
-        });
-        html += '<button class="link-btn" style="margin-top:8px" data-action="delete-session" data-id="' + s.id + '">この日の記録を全て削除</button></div>';
+        var hasPR = sessionHasPR(s);
+        var expanded = !!ui.expandedSessions[s.id];
+        html += '<div class="session-card"><div class="session-top clickable" data-action="toggle-session-history" data-id="' + s.id + '">' +
+          '<span class="session-date">' + formatDate(s.date) + '</span>' +
+          '<span class="session-total">合計 ' + sessionTotal + '回・' + s.items.length + '種目</span>' +
+          (hasPR ? '<span class="pr-badge">🏆 自己ベスト更新</span>' : '') +
+          '<span class="expand-arrow">' + (expanded ? '▲' : '▼') + '</span></div>';
+        if (expanded) {
+          s.items.forEach(function (it) {
+            var ex = exerciseById(it.exerciseId);
+            if (ui.editingItem && ui.editingItem.sessionId === s.id && ui.editingItem.itemId === it.id) {
+              html += '<div style="padding:6px 0"><div class="item-name" style="width:auto;margin-bottom:6px">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + '</div>' + renderItemEditForm() + '</div>';
+            } else {
+              var itemPR = isItemPR(s.date, it.exerciseId, it.sets);
+              html += '<div class="item-row"><span class="item-name">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + (itemPR ? '<span class="pr-inline">🏆PR</span>' : '') + '</span>' +
+                '<div class="set-chips">' + it.sets.map(function (st) { return '<span class="set-chip">' + st.weight + 'kg×' + st.reps + '</span>'; }).join('') + '</div>' +
+                '<button class="delete-btn" data-action="start-edit-item" data-session="' + s.id + '" data-item="' + it.id + '">✎</button>' +
+                '<button class="delete-btn" data-action="delete-session-item" data-session="' + s.id + '" data-item="' + it.id + '">✕</button></div>';
+            }
+          });
+          html += '<button class="link-btn" style="margin-top:8px" data-action="delete-session" data-id="' + s.id + '">この日の記録を全て削除</button>';
+        }
+        html += '</div>';
       });
     }
     return html;
@@ -931,6 +968,7 @@
       else if (action === 'save-session') saveSession();
       else if (action === 'delete-session') deleteSession(id);
       else if (action === 'delete-session-item') deleteSessionItem(el.dataset.session, el.dataset.item);
+      else if (action === 'toggle-session-history') { ui.expandedSessions[id] = !ui.expandedSessions[id]; render(); }
       else if (action === 'start-edit-item') startEditItem(el.dataset.session, el.dataset.item);
       else if (action === 'cancel-edit-item') cancelEditItem();
       else if (action === 'add-edit-set') addEditSetRow();
