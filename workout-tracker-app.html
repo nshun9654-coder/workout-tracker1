@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="筋トレ記録">
+<meta name="theme-color" content="#1A1918">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACaUlEQVR4nO3dQUrDQBiAUSseQl17Ig/kwgN5Ig/joiAifqKmiTPDe+uWZH4+JgTK9HR/d3sFX7n+7xtgXOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SDdHXuzl+eHnH358et3vTkYz5mROxxw1+avFf7R8IiNP5ojHyp/Xv/G74xt8MrvHsX0Nq/Yx/mT2jeNSd79eH1NMxtsKacc4Lhv1SpvHLJOxc5DEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZAOPft8uwXOFJzowO6Zdo4FyriaahUzxcHBxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEGaKY6JfgnxjYlWMdmPfSaa7AJm2jk4mDhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQO0o5xXPbkv5XOEZxlMnYO0r5xXCrqlbaNsykms/vOsf3u1yvjbPzJHPFY2bKGVcs4G3wyp/u7272v8e5X/9S9dhafjDmZQ+NgLt5WSOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDtIba9tPQ7cJ7GAAAAAASUVORK5CYII=">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACaUlEQVR4nO3dQUrDQBiAUSseQl17Ig/kwgN5Ig/joiAifqKmiTPDe+uWZH4+JgTK9HR/d3sFX7n+7xtgXOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SDdHXuzl+eHnH358et3vTkYz5mROxxw1+avFf7R8IiNP5ojHyp/Xv/G74xt8MrvHsX0Nq/Yx/mT2jeNSd79eH1NMxtsKacc4Lhv1SpvHLJOxc5DEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZDEQRIHSRwkcZAOPft8uwXOFJzowO6Zdo4FyriaahUzxcHBxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEGaKY6JfgnxjYlWMdmPfSaa7AJm2jk4mDhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQO0o5xXPbkv5XOEZxlMnYO0r5xXCrqlbaNsykms/vOsf3u1yvjbPzJHPFY2bKGVcs4G3wyp/u7272v8e5X/9S9dhafjDmZQ+NgLt5WSOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDtIba9tPQ7cJ7GAAAAAASUVORK5CYII=">
+<title>筋トレ記録</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { background: #1A1918; margin: 0; padding: 0; overscroll-behavior-y: none; }
+  body { font-family: 'Inter', -apple-system, sans-serif; color: #EFEBE3; }
+  #app { max-width: 480px; margin: 0 auto; padding: 20px 16px 48px; min-height: 100vh; }
+  h1 { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: 0.3px; margin: 0; }
+  .header-row { display: flex; align-items: center; gap: 8px; }
+  .subtitle { margin: 4px 0 16px; font-size: 13px; color: #8B8680; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 18px; background: #201F1D; border-radius: 10px; padding: 4px; flex-wrap: wrap; }
+  .tab-btn { flex: 1 1 18%; min-width: 60px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500; padding: 8px 2px; border-radius: 7px; border: none; background: transparent; color: #8B8680; cursor: pointer; }
+  .tab-btn.active { background: #C89B3C; color: #1A1918; font-weight: 600; }
+
+  .back-link { display: flex; align-items: center; gap: 4px; font-size: 12.5px; color: #8B8680; background: transparent; border: none; cursor: pointer; padding: 4px 0; margin-bottom: 14px; font-family: 'Inter', sans-serif; }
+
+  .section-label { font-size: 11.5px; color: #6B6660; margin-bottom: 6px; letter-spacing: 0.2px; }
+  .empty-text { color: #8B8680; font-size: 13.5px; line-height: 1.6; padding: 20px 8px; text-align: center; margin: 0; }
+  .empty-text .btn-primary { margin-top: 10px; }
+
+  input, select, textarea {
+    font-family: 'Inter', sans-serif; font-size: 14px; padding: 8px 10px; border-radius: 6px;
+    border: 1px solid #3A3733; background: #1A1918; color: #EFEBE3; outline: none; width: 100%;
+  }
+  select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238B8680' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; background-size: 16px; padding-right: 30px; }
+  input::placeholder, textarea::placeholder { color: #5A564F; }
+
+  .btn-primary { font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 6px; border: none; background: #C89B3C; color: #1A1918; cursor: pointer; white-space: nowrap; }
+  .btn-ghost { display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: 6px; border: 1px solid #3A3733; background: transparent; color: #8B8680; cursor: pointer; }
+
+  .block-card { background: #242220; border: 1px solid #302E2A; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+  .block-header { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .block-remove { flex-shrink: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #3A3733; background: transparent; color: #8B8680; cursor: pointer; }
+  .set-rows-header { display: flex; gap: 8px; font-size: 10.5px; color: #6B6660; margin: 10px 0 6px; align-items: center; }
+  .set-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .set-index { width: 40px; flex-shrink: 0; font-family: 'Oswald', sans-serif; font-size: 13px; color: #6B6660; text-align: center; }
+  .set-input { flex: 1; min-width: 0; }
+  .set-remove-btn { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 6px; border: 1px solid #3A3733; background: transparent; color: #8B8680; cursor: pointer; font-size: 16px; line-height: 1; }
+  .set-remove-btn:disabled { opacity: 0.3; }
+  .add-set-btn { display: flex; align-items: center; gap: 5px; font-size: 12.5px; padding: 6px 10px; border-radius: 6px; border: 1px dashed #4A4640; background: transparent; color: #8B8680; cursor: pointer; margin: 2px 0 0; font-family: 'Inter', sans-serif; }
+  .add-block-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; font-size: 13.5px; padding: 10px 0; border-radius: 8px; border: 1px dashed #4A4640; background: transparent; color: #8B8680; cursor: pointer; margin-bottom: 14px; font-family: 'Inter', sans-serif; }
+  .save-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; font-size: 14px; font-weight: 600; padding: 11px 0; border-radius: 7px; border: none; background: #C89B3C; color: #1A1918; cursor: pointer; font-family: 'Inter', sans-serif; margin-bottom: 8px; }
+
+  .field-label { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: #8B8680; margin-bottom: 14px; }
+
+  .stats-row { display: flex; gap: 8px; margin: 14px 0 16px; }
+  .stat-card { flex: 1; background: #242220; border: 1px solid #302E2A; border-radius: 8px; padding: 10px 8px; text-align: center; }
+  .stat-label { font-size: 10.5px; color: #8B8680; margin-bottom: 4px; }
+  .stat-value { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 600; }
+  .stat-unit { font-size: 11px; margin-left: 2px; color: #8B8680; font-family: 'Inter', sans-serif; }
+
+  .chart-section { background: #201F1D; border: 1px solid #302E2A; border-radius: 10px; padding: 14px 8px 10px; margin-bottom: 16px; }
+  .metric-toggle { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; padding-left: 8px; }
+  .metric-btn { font-family: 'Inter', sans-serif; font-size: 12px; padding: 5px 10px; border-radius: 6px; border: 1px solid #33312E; background: transparent; color: #8B8680; cursor: pointer; }
+  .metric-btn.active { background: #33312E; color: #EFEBE3; border-color: #4A4640; }
+  .empty-chart { padding: 24px 8px; text-align: center; color: #6B6660; font-size: 12.5px; }
+
+  .history-header { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+  .history-title { font-size: 12.5px; color: #8B8680; font-weight: 500; }
+  .session-card { background: #201F1D; border: 1px solid #2A2825; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .session-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .session-date { font-family: 'Oswald', sans-serif; font-size: 14px; color: #EFEBE3; }
+  .session-total { flex: 1; font-size: 11.5px; color: #C89B3C; }
+  .item-row { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-top: 1px solid #262421; }
+  .item-row:first-of-type { border-top: none; }
+  .item-name { font-size: 12.5px; color: #B5AFA6; width: 92px; flex-shrink: 0; padding-top: 2px; }
+  .set-chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
+  .set-chip { font-size: 11.5px; color: #B5AFA6; background: #1A1918; border: 1px solid #2C2A27; border-radius: 4px; padding: 2px 6px; }
+  .delete-btn { border: none; background: transparent; color: #5A5650; cursor: pointer; padding: 2px 4px; font-size: 13px; flex-shrink: 0; }
+
+  .list-card { display: flex; align-items: center; gap: 10px; background: #242220; border: 1px solid #302E2A; border-radius: 10px; padding: 13px 14px; margin-bottom: 8px; cursor: pointer; }
+  .list-card-name { flex: 1; font-size: 14px; color: #EFEBE3; font-weight: 500; }
+  .list-card-sub { font-size: 11.5px; color: #8B8680; }
+  .list-card-stat { font-family: 'Oswald', sans-serif; font-size: 13px; color: #C89B3C; }
+  .list-card-arrow { color: #6B6660; font-size: 15px; }
+  .list-card-del { border: none; background: transparent; color: #5A5650; cursor: pointer; font-size: 13px; padding: 2px 4px; }
+
+  .manage-section { margin-bottom: 26px; }
+  .manage-row { display: flex; align-items: center; gap: 10px; background: #201F1D; border: 1px solid #2A2825; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; }
+  .manage-row-name { flex: 1; font-size: 13.5px; }
+  .manage-row-badge { font-size: 10.5px; color: #8B8680; background: #1A1918; border: 1px solid #2C2A27; border-radius: 4px; padding: 2px 7px; }
+  .manage-add-box { display: flex; gap: 8px; margin-top: 10px; }
+  .manage-add-box select { flex: 1; }
+  .manage-add-box input { flex: 1.4; }
+
+  .add-to-split-box { display: flex; gap: 8px; margin: 10px 0 18px; }
+  .add-to-split-box select { flex: 1; }
+
+  .link-btn { display: block; margin: 4px auto; font-size: 12px; color: #6B6660; background: transparent; border: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; font-family: 'Inter', sans-serif; }
+  .error-banner { background: #3A2A28; color: #D9A9A0; font-size: 12.5px; padding: 8px 12px; border-radius: 6px; margin-bottom: 14px; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #242220; color: #EFEBE3; border: 1px solid #4A4640; padding: 10px 18px; border-radius: 8px; font-size: 13px; z-index: 100; opacity: 0; transition: opacity 0.2s; }
+  .toast.show { opacity: 1; }
+  .confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 24px; }
+  .confirm-card { background: #242220; border: 1px solid #3A3733; border-radius: 12px; padding: 20px; max-width: 340px; width: 100%; }
+  .confirm-message { font-size: 14px; line-height: 1.6; color: #EFEBE3; margin: 0 0 18px; }
+  .confirm-actions { display: flex; gap: 10px; }
+  .confirm-actions button { flex: 1; padding: 10px 0; border-radius: 7px; font-size: 13.5px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; }
+  .confirm-cancel { border: 1px solid #3A3733; background: transparent; color: #B5AFA6; }
+  .confirm-delete { border: none; background: #B0645A; color: #1A1918; }
+  .edit-card { background: #201F1D; border: 1px solid #4A4640; border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .edit-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .edit-actions button { flex: 1; }
+  details.backup { margin-top: 28px; border-top: 1px solid #262421; padding-top: 16px; }
+  summary.backup-summary { font-size: 12.5px; color: #8B8680; cursor: pointer; margin-bottom: 12px; }
+  .backup-desc { font-size: 12px; color: #6B6660; line-height: 1.6; margin: 0 0 10px; }
+  .backup-actions { display: flex; gap: 8px; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" class="toast"></div>
+<script>
+(function () {
+  var STORAGE_KEY = 'workout-tracker-data';
+
+  var state = { bodyParts: [], exercises: [], splits: [], sessions: [] };
+  var ui = {
+    tab: 'log', // log | splits | bodypart | manageExercise | manageBodyPart
+    splitsView: 'list', // list | members | detail
+    selectedSplitId: null,
+    bodyPartView: 'list', // list | exercises | detail
+    selectedBodyPartId: null,
+    selectedExerciseId: null,
+    exMetric: 'e1rm',
+    error: null,
+    pendingConfirm: null, // { message, action, id }
+    editingItem: null // { sessionId, itemId }
+  };
+  var draft = {
+    date: todayISO(),
+    blocks: [emptyBlock()],
+    quickDate: todayISO(),
+    quickSets: emptySetRows(3),
+    newSplitName: '',
+    addToSplitExerciseId: '',
+    manageNewBodyPartName: '',
+    manageNewExName: '',
+    manageNewExBodyPartId: '',
+    editDate: '',
+    editSets: [],
+    restoreText: ''
+  };
+
+  var EX_METRICS = [
+    { key: 'e1rm', label: '推定1RM', unit: 'kg', calc: bestE1RM },
+    { key: 'weight', label: '最大重量', unit: 'kg', calc: maxWeight },
+    { key: 'reps', label: '総回数', unit: '回', calc: totalReps },
+    { key: 'volume', label: '総重量', unit: 'kg', calc: volume }
+  ];
+
+  function emptyBlock() { return { exerciseId: '', sets: emptySetRows(3) }; }
+  function emptySetRows(n) { var r = []; for (var i = 0; i < n; i++) r.push({ weight: '', reps: '' }); return r; }
+  function todayISO() { return new Date().toISOString().slice(0, 10); }
+  function epley1RM(w, r) { if (!w || !r) return 0; if (r <= 1) return w; return w * (1 + r / 30); }
+  function totalReps(sets) { return sets.reduce(function (s, x) { return s + (x.reps || 0); }, 0); }
+  function maxWeight(sets) { return sets.length ? Math.max.apply(null, sets.map(function (s) { return s.weight || 0; })) : 0; }
+  function bestE1RM(sets) { return sets.length ? Math.max.apply(null, sets.map(function (s) { return epley1RM(s.weight, s.reps); })) : 0; }
+  function volume(sets) { return sets.reduce(function (s, x) { return s + (x.weight || 0) * (x.reps || 0); }, 0); }
+  function formatDate(iso) { var d = new Date(iso + 'T00:00:00'); return (d.getMonth() + 1) + '/' + d.getDate(); }
+  function escapeHtml(str) { return String(str).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function exerciseById(id) { return state.exercises.find(function (e) { return e.id === id; }); }
+  function bodyPartById(id) { return state.bodyParts.find(function (b) { return b.id === id; }); }
+  function splitById(id) { return state.splits.find(function (s) { return s.id === id; }); }
+
+  function itemsForExercise(exerciseId) {
+    var out = [];
+    state.sessions.forEach(function (s) {
+      s.items.forEach(function (it) { if (it.exerciseId === exerciseId) out.push({ date: s.date, sets: it.sets, sessionId: s.id, itemId: it.id }); });
+    });
+    return out.sort(function (a, b) { return a.date.localeCompare(b.date); });
+  }
+  function itemsForExerciseIds(ids) {
+    var out = [];
+    state.sessions.forEach(function (s) {
+      s.items.forEach(function (it) { if (ids.indexOf(it.exerciseId) !== -1) out.push({ date: s.date, sets: it.sets, sessionId: s.id, itemId: it.id }); });
+    });
+    return out.sort(function (a, b) { return a.date.localeCompare(b.date); });
+  }
+  function itemsForBodyPart(bodyPartId) {
+    var ids = state.exercises.filter(function (e) { return e.bodyPartId === bodyPartId; }).map(function (e) { return e.id; });
+    return itemsForExerciseIds(ids);
+  }
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) applyLoadedData(JSON.parse(raw));
+    } catch (e) { ui.error = 'データの読み込みに失敗しました'; }
+  }
+
+  function applyLoadedData(data) {
+    var bps = data.bodyParts || data.categories || [];
+    var exs = (data.exercises || []).map(function (e) {
+      var bpId = e.bodyPartId || e.categoryId;
+      return Object.assign({}, e, { bodyPartId: bpId });
+    });
+    if (exs.some(function (e) { return !e.bodyPartId; })) {
+      var def = bps.find(function (b) { return b.id === 'bp_default'; });
+      if (!def) { def = { id: 'bp_default', name: 'その他' }; bps.push(def); }
+      exs = exs.map(function (e) { return e.bodyPartId ? e : Object.assign({}, e, { bodyPartId: def.id }); });
+    }
+    var splits = data.splits || [];
+
+    var sessions;
+    if (data.sessions) {
+      sessions = data.sessions;
+    } else {
+      var entries = (data.entries || []).map(function (e) {
+        return e.sets ? e : { id: e.id, exerciseId: e.exerciseId, date: e.date, sets: [{ weight: e.weight, reps: e.reps }] };
+      });
+      var byDate = {};
+      entries.forEach(function (e) {
+        if (!byDate[e.date]) byDate[e.date] = { id: 'ses_' + e.date + '_' + Math.random().toString(36).slice(2, 7), date: e.date, items: [] };
+        byDate[e.date].items.push({ id: e.id, exerciseId: e.exerciseId, sets: e.sets });
+      });
+      sessions = Object.values(byDate);
+    }
+
+    state = { bodyParts: bps, exercises: exs, splits: splits, sessions: sessions };
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); ui.error = null; }
+    catch (e) { ui.error = '保存に失敗しました（ストレージの空き容量をご確認ください）'; }
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast show';
+    setTimeout(function () { t.className = 'toast'; }, 1800);
+  }
+
+  function requestConfirm(message, action, id, extraId) {
+    ui.pendingConfirm = { message: message, action: action, id: id, extraId: extraId };
+    render();
+  }
+  function resolveConfirm(confirmed) {
+    var pending = ui.pendingConfirm;
+    ui.pendingConfirm = null;
+    if (!confirmed || !pending) { render(); return; }
+    if (pending.action === 'delete-bodypart') deleteBodyPart(pending.id);
+    else if (pending.action === 'delete-exercise') deleteExercise(pending.id);
+    else if (pending.action === 'delete-split') deleteSplit(pending.id);
+    else if (pending.action === 'reset-all') resetAll();
+    else if (pending.action === 'remove-exercise-from-split') removeExerciseFromSplit(pending.extraId, pending.id);
+    else render();
+  }
+
+  // ---------- body part management ----------
+  function addBodyPart() {
+    var name = draft.manageNewBodyPartName.trim();
+    if (!name) return;
+    state.bodyParts.push({ id: 'bp_' + Date.now(), name: name });
+    draft.manageNewBodyPartName = '';
+    save(); render();
+  }
+  function deleteBodyPart(id) {
+    var exIds = state.exercises.filter(function (e) { return e.bodyPartId === id; }).map(function (e) { return e.id; });
+    state.bodyParts = state.bodyParts.filter(function (b) { return b.id !== id; });
+    state.exercises = state.exercises.filter(function (e) { return e.bodyPartId !== id; });
+    state.splits = state.splits.map(function (s) { return Object.assign({}, s, { exerciseIds: s.exerciseIds.filter(function (eid) { return exIds.indexOf(eid) === -1; }) }); });
+    state.sessions = state.sessions.map(function (s) {
+      return Object.assign({}, s, { items: s.items.filter(function (it) { return exIds.indexOf(it.exerciseId) === -1; }) });
+    }).filter(function (s) { return s.items.length > 0; });
+    if (ui.selectedBodyPartId === id) { ui.selectedBodyPartId = null; ui.bodyPartView = 'list'; }
+    save(); render();
+  }
+
+  // ---------- exercise management ----------
+  function addExercise() {
+    var name = draft.manageNewExName.trim();
+    var bpId = draft.manageNewExBodyPartId;
+    if (!name || !bpId) { showToast('種目名と部位を選んでください'); return; }
+    state.exercises.push({ id: 'ex_' + Date.now(), name: name, bodyPartId: bpId });
+    draft.manageNewExName = '';
+    save(); render();
+    showToast('種目を追加しました');
+  }
+  function deleteExercise(id) {
+    state.exercises = state.exercises.filter(function (e) { return e.id !== id; });
+    state.splits = state.splits.map(function (s) { return Object.assign({}, s, { exerciseIds: s.exerciseIds.filter(function (eid) { return eid !== id; }) }); });
+    state.sessions = state.sessions.map(function (s) {
+      return Object.assign({}, s, { items: s.items.filter(function (it) { return it.exerciseId !== id; }) });
+    }).filter(function (s) { return s.items.length > 0; });
+    if (ui.selectedExerciseId === id) {
+      ui.selectedExerciseId = null;
+      if (ui.splitsView === 'detail') ui.splitsView = 'members';
+      if (ui.bodyPartView === 'detail') ui.bodyPartView = 'exercises';
+    }
+    save(); render();
+  }
+
+  // ---------- split management ----------
+  function addSplit() {
+    var name = draft.newSplitName.trim();
+    if (!name) return;
+    state.splits.push({ id: 'sp_' + Date.now(), name: name, exerciseIds: [] });
+    draft.newSplitName = '';
+    save(); render();
+  }
+  function deleteSplit(id) {
+    state.splits = state.splits.filter(function (s) { return s.id !== id; });
+    if (ui.selectedSplitId === id) { ui.selectedSplitId = null; ui.splitsView = 'list'; }
+    save(); render();
+  }
+  function addExerciseToSplit(splitId) {
+    var exId = draft.addToSplitExerciseId;
+    if (!exId) return;
+    var sp = splitById(splitId);
+    if (!sp) return;
+    if (sp.exerciseIds.indexOf(exId) === -1) sp.exerciseIds.push(exId);
+    draft.addToSplitExerciseId = '';
+    save(); render();
+  }
+  function removeExerciseFromSplit(splitId, exId) {
+    var sp = splitById(splitId);
+    if (!sp) return;
+    sp.exerciseIds = sp.exerciseIds.filter(function (id) { return id !== exId; });
+    save(); render();
+  }
+
+  // ---------- session logging (log tab, multi-exercise) ----------
+  function addBlock() { draft.blocks.push(emptyBlock()); render(); }
+  function removeBlock(i) { if (draft.blocks.length > 1) draft.blocks.splice(i, 1); else draft.blocks = [emptyBlock()]; render(); }
+  function addSetInBlock(bi) { draft.blocks[bi].sets.push({ weight: '', reps: '' }); render(); }
+  function removeSetInBlock(bi, si) { if (draft.blocks[bi].sets.length > 1) draft.blocks[bi].sets.splice(si, 1); render(); }
+
+  function saveSession() {
+    var items = [];
+    draft.blocks.forEach(function (b, i) {
+      if (!b.exerciseId) return;
+      var validSets = b.sets.map(function (r) { return { weight: parseFloat(r.weight), reps: parseInt(r.reps, 10) }; })
+        .filter(function (s) { return s.weight > 0 && s.reps > 0; });
+      if (validSets.length > 0) items.push({ id: 'it_' + Date.now() + '_' + i, exerciseId: b.exerciseId, sets: validSets });
+    });
+    if (items.length === 0) { showToast('種目を選んで、重量と回数を入力してください'); return; }
+    state.sessions.push({ id: 'ses_' + Date.now(), date: draft.date, items: items });
+    draft.blocks = [emptyBlock()];
+    draft.date = todayISO();
+    save(); render();
+    showToast('記録しました');
+  }
+  function deleteSession(id) { state.sessions = state.sessions.filter(function (s) { return s.id !== id; }); save(); render(); }
+  function deleteSessionItem(sessionId, itemId) {
+    state.sessions = state.sessions.map(function (s) {
+      if (s.id !== sessionId) return s;
+      return Object.assign({}, s, { items: s.items.filter(function (it) { return it.id !== itemId; }) });
+    }).filter(function (s) { return s.items.length > 0; });
+    save(); render();
+  }
+
+  // ---------- editing a logged item ----------
+  function findSessionAndItem(sessionId, itemId) {
+    var session = state.sessions.find(function (s) { return s.id === sessionId; });
+    if (!session) return null;
+    var item = session.items.find(function (it) { return it.id === itemId; });
+    if (!item) return null;
+    return { session: session, item: item };
+  }
+  function startEditItem(sessionId, itemId) {
+    var found = findSessionAndItem(sessionId, itemId);
+    if (!found) return;
+    ui.editingItem = { sessionId: sessionId, itemId: itemId };
+    draft.editDate = found.session.date;
+    draft.editSets = found.item.sets.map(function (s) { return { weight: String(s.weight), reps: String(s.reps) }; });
+    render();
+  }
+  function cancelEditItem() { ui.editingItem = null; render(); }
+  function addEditSetRow() { draft.editSets.push({ weight: '', reps: '' }); render(); }
+  function removeEditSetRow(i) { if (draft.editSets.length > 1) draft.editSets.splice(i, 1); render(); }
+  function saveEditItem() {
+    if (!ui.editingItem) return;
+    var sessionId = ui.editingItem.sessionId, itemId = ui.editingItem.itemId;
+    var found = findSessionAndItem(sessionId, itemId);
+    if (!found) { ui.editingItem = null; render(); return; }
+    var validSets = draft.editSets.map(function (r) { return { weight: parseFloat(r.weight), reps: parseInt(r.reps, 10) }; })
+      .filter(function (s) { return s.weight > 0 && s.reps > 0; });
+    if (validSets.length === 0) { showToast('重量と回数を入力してください'); return; }
+    var newDate = draft.editDate;
+    var exerciseId = found.item.exerciseId;
+
+    if (newDate === found.session.date) {
+      found.item.sets = validSets;
+    } else {
+      // move item to a session on the new date (merge into an existing one if present)
+      found.session.items = found.session.items.filter(function (it) { return it.id !== itemId; });
+      state.sessions = state.sessions.filter(function (s) { return s.items.length > 0; });
+      var target = state.sessions.find(function (s) { return s.date === newDate; });
+      var movedItem = { id: itemId, exerciseId: exerciseId, sets: validSets };
+      if (target) target.items.push(movedItem);
+      else state.sessions.push({ id: 'ses_' + Date.now(), date: newDate, items: [movedItem] });
+    }
+    ui.editingItem = null;
+    save(); render();
+    showToast('更新しました');
+  }
+
+  // ---------- quick single-exercise entry (from detail view) ----------
+  function addQuickSetRow() { draft.quickSets.push({ weight: '', reps: '' }); render(); }
+  function removeQuickSetRow(i) { if (draft.quickSets.length > 1) draft.quickSets.splice(i, 1); render(); }
+  function saveQuickEntry() {
+    var ex = exerciseById(ui.selectedExerciseId);
+    if (!ex) return;
+    var validSets = draft.quickSets.map(function (r) { return { weight: parseFloat(r.weight), reps: parseInt(r.reps, 10) }; })
+      .filter(function (s) { return s.weight > 0 && s.reps > 0; });
+    if (validSets.length === 0) { showToast('重量と回数を入力してください'); return; }
+    state.sessions.push({ id: 'ses_' + Date.now(), date: draft.quickDate, items: [{ id: 'it_' + Date.now(), exerciseId: ex.id, sets: validSets }] });
+    draft.quickSets = emptySetRows(3);
+    draft.quickDate = todayISO();
+    save(); render();
+    showToast('記録しました');
+  }
+
+  // ---------- backup ----------
+  function copyBackup() {
+    var json = JSON.stringify(state);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(json).then(function () { showToast('コピーしました'); }).catch(function () { fallbackCopy(json); });
+    } else { fallbackCopy(json); }
+  }
+  function fallbackCopy(json) {
+    var ta = document.createElement('textarea');
+    ta.value = json; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('コピーしました'); }
+    catch (e) { showToast('コピーできませんでした。テキストを長押しして手動でコピーしてください'); }
+    document.body.removeChild(ta);
+  }
+  function restoreBackup() {
+    var text = draft.restoreText.trim();
+    if (!text) return;
+    try {
+      var data = JSON.parse(text);
+      if (!data || typeof data !== 'object') throw new Error('invalid');
+      ui.selectedExerciseId = null; ui.selectedBodyPartId = null; ui.selectedSplitId = null;
+      ui.bodyPartView = 'list'; ui.splitsView = 'list';
+      applyLoadedData(data);
+      draft.restoreText = '';
+      save(); render();
+      showToast('復元しました');
+    } catch (e) { showToast('復元に失敗しました。コピーした内容を確認してください'); }
+  }
+  function resetAll() {
+    state = { bodyParts: [], exercises: [], splits: [], sessions: [] };
+    ui.selectedExerciseId = null; ui.selectedBodyPartId = null; ui.selectedSplitId = null;
+    ui.bodyPartView = 'list'; ui.splitsView = 'list';
+    save(); render();
+  }
+
+  // ---------- chart ----------
+  function buildChartSVG(points) {
+    if (points.length === 0) return '<div class="empty-chart">記録を追加するとグラフが表示されます</div>';
+    var w = 300, h = 160, padL = 30, padR = 10, padT = 12, padB = 22;
+    var ys = points.map(function (p) { return p.value; });
+    var minY = Math.min.apply(null, ys.concat([0]));
+    var maxY = Math.max.apply(null, ys);
+    var range = (maxY - minY) || 1;
+    var stepX = points.length > 1 ? (w - padL - padR) / (points.length - 1) : 0;
+    var coords = points.map(function (p, i) {
+      var x = padL + i * stepX;
+      var y = padT + (h - padT - padB) * (1 - (p.value - minY) / range);
+      return { x: x, y: y, value: p.value, date: p.date };
+    });
+    var pathD = coords.map(function (c, i) { return (i === 0 ? 'M' : 'L') + c.x.toFixed(1) + ',' + c.y.toFixed(1); }).join(' ');
+    var grid = [0, 0.5, 1].map(function (f) {
+      var y = padT + (h - padT - padB) * f;
+      return '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="#33312E" stroke-width="1"/>';
+    }).join('');
+    var dots = coords.map(function (c) { return '<circle cx="' + c.x.toFixed(1) + '" cy="' + c.y.toFixed(1) + '" r="3" fill="#C89B3C"/>'; }).join('');
+    var firstLabel = formatDate(points[0].date);
+    var lastLabel = formatDate(points[points.length - 1].date);
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;height:170px;">' + grid +
+      '<path d="' + pathD + '" fill="none" stroke="#C89B3C" stroke-width="2.5"/>' + dots +
+      '<text x="' + padL + '" y="' + (h - 6) + '" fill="#8B8680" font-size="10" font-family="Inter">' + firstLabel + '</text>' +
+      '<text x="' + (w - padR) + '" y="' + (h - 6) + '" fill="#8B8680" font-size="10" font-family="Inter" text-anchor="end">' + lastLabel + '</text>' +
+      '<text x="2" y="' + (padT + 4) + '" fill="#8B8680" font-size="10" font-family="Inter">' + maxY.toFixed(0) + '</text>' +
+      '<text x="2" y="' + (h - padB) + '" fill="#8B8680" font-size="10" font-family="Inter">' + minY.toFixed(0) + '</text>' +
+      '</svg>';
+  }
+  function groupByDate(rows, calc) {
+    var byDate = {};
+    rows.forEach(function (r) { if (!byDate[r.date]) byDate[r.date] = []; byDate[r.date] = byDate[r.date].concat(r.sets); });
+    return Object.keys(byDate).sort().map(function (d) { return { date: d, value: calc(byDate[d]) }; });
+  }
+
+  function renderItemEditForm() {
+    var html = '<div class="edit-card"><label class="field-label">日付<input type="date" data-field="edit-date" value="' + draft.editDate + '"></label>' +
+      '<div class="set-rows-header"><span style="width:40px">セット</span><span style="flex:1">重量(kg)</span><span style="flex:1">回数</span><span style="width:28px"></span></div>';
+    draft.editSets.forEach(function (row, si) {
+      html += '<div class="set-row"><span class="set-index">' + (si + 1) + '</span>' +
+        '<input class="set-input" type="number" inputmode="decimal" placeholder="60" data-field="edit-weight" data-index="' + si + '" value="' + escapeHtml(row.weight) + '">' +
+        '<input class="set-input" type="number" inputmode="numeric" placeholder="10" data-field="edit-reps" data-index="' + si + '" value="' + escapeHtml(row.reps) + '">' +
+        '<button class="set-remove-btn" data-action="remove-edit-set" data-index="' + si + '" ' + (draft.editSets.length === 1 ? 'disabled' : '') + '>−</button></div>';
+    });
+    html += '<button class="add-set-btn" data-action="add-edit-set">＋ セットを追加</button>' +
+      '<div class="edit-actions"><button class="confirm-cancel" style="border-radius:6px;padding:9px 0" data-action="cancel-edit-item">キャンセル</button>' +
+      '<button class="btn-primary" data-action="save-edit-item">保存</button></div></div>';
+    return html;
+  }
+
+  // ---------- shared: exercise detail ----------
+  function renderExerciseDetailShared(ex, backLabel, backAction) {
+    var html = '<button class="back-link" data-action="' + backAction + '">' + backLabel + '</button>';
+    html += '<div class="header-row" style="margin-bottom:10px"><h1 style="font-size:19px">' + escapeHtml(ex.name) + '</h1></div>';
+
+    var rows = itemsForExercise(ex.id);
+    var allSets = []; rows.forEach(function (r) { allSets = allSets.concat(r.sets); });
+
+    if (rows.length > 0) {
+      var best = maxWeight(allSets);
+      var best1rm = bestE1RM(allSets);
+      var firstBest1rm = bestE1RM(rows[0].sets);
+      var growth = firstBest1rm > 0 ? ((best1rm - firstBest1rm) / firstBest1rm) * 100 : 0;
+      html += '<div class="stats-row">' +
+        '<div class="stat-card"><div class="stat-label">自己ベスト重量</div><div class="stat-value">' + best + '<span class="stat-unit">kg</span></div></div>' +
+        '<div class="stat-card"><div class="stat-label">推定1RM</div><div class="stat-value">' + best1rm.toFixed(1) + '<span class="stat-unit">kg</span></div></div>' +
+        '<div class="stat-card"><div class="stat-label">初回からの伸び</div><div class="stat-value" style="color:' + (growth >= 0 ? '#C89B3C' : '#B0645A') + '">' + (growth >= 0 ? '+' : '') + growth.toFixed(0) + '<span class="stat-unit">%</span></div></div>' +
+        '</div>';
+    }
+
+    var metricInfo = EX_METRICS.find(function (m) { return m.key === ui.exMetric; });
+    var chartPoints = groupByDate(rows, metricInfo.calc);
+    html += '<div class="chart-section"><div class="metric-toggle">';
+    EX_METRICS.forEach(function (m) {
+      html += '<button class="metric-btn' + (m.key === ui.exMetric ? ' active' : '') + '" data-action="select-ex-metric" data-metric="' + m.key + '">' + m.label + '</button>';
+    });
+    html += '</div>' + buildChartSVG(chartPoints) + '</div>';
+
+    html += '<div class="block-card"><div class="section-label" style="margin-bottom:10px">この種目を記録する</div>' +
+      '<label class="field-label">日付<input type="date" data-field="quick-date" value="' + draft.quickDate + '"></label>' +
+      '<div class="set-rows-header"><span style="width:40px">セット</span><span style="flex:1">重量(kg)</span><span style="flex:1">回数</span><span style="width:28px"></span></div>';
+    draft.quickSets.forEach(function (row, si) {
+      html += '<div class="set-row"><span class="set-index">' + (si + 1) + '</span>' +
+        '<input class="set-input" type="number" inputmode="decimal" placeholder="60" data-field="quick-weight" data-index="' + si + '" value="' + escapeHtml(row.weight) + '">' +
+        '<input class="set-input" type="number" inputmode="numeric" placeholder="10" data-field="quick-reps" data-index="' + si + '" value="' + escapeHtml(row.reps) + '">' +
+        '<button class="set-remove-btn" data-action="remove-quick-set" data-index="' + si + '" ' + (draft.quickSets.length === 1 ? 'disabled' : '') + '>−</button></div>';
+    });
+    html += '<button class="add-set-btn" data-action="add-quick-set">＋ セットを追加</button></div>';
+    html += '<button class="save-btn" data-action="save-quick-entry">保存する</button>';
+
+    html += '<div class="history-header" style="margin-top:18px">📈 <span class="history-title">履歴</span></div>';
+    if (rows.length === 0) {
+      html += '<div class="empty-chart">まだ記録がありません</div>';
+    } else {
+      rows.slice().reverse().forEach(function (r) {
+        if (ui.editingItem && ui.editingItem.sessionId === r.sessionId && ui.editingItem.itemId === r.itemId) {
+          html += renderItemEditForm();
+        } else {
+          html += '<div class="session-card"><div class="session-top"><span class="session-date">' + formatDate(r.date) + '</span>' +
+            '<span class="session-total">合計 ' + totalReps(r.sets) + '回</span>' +
+            '<button class="delete-btn" data-action="start-edit-item" data-session="' + r.sessionId + '" data-item="' + r.itemId + '">✎</button></div>' +
+            '<div class="set-chips">' + r.sets.map(function (s) { return '<span class="set-chip">' + s.weight + 'kg×' + s.reps + '</span>'; }).join('') + '</div></div>';
+        }
+      });
+    }
+    html += '<button class="link-btn" data-action="delete-exercise" data-id="' + ex.id + '">この種目を削除</button>';
+    return html;
+  }
+
+  function exerciseOptionsHtml(excludeIds) {
+    excludeIds = excludeIds || [];
+    var html = '<option value="">種目を選択</option>';
+    state.bodyParts.forEach(function (bp) {
+      var opts = state.exercises.filter(function (e) { return e.bodyPartId === bp.id && excludeIds.indexOf(e.id) === -1; })
+        .map(function (e) { return '<option value="' + e.id + '">' + escapeHtml(e.name) + '</option>'; }).join('');
+      if (opts) html += '<optgroup label="' + escapeHtml(bp.name) + '">' + opts + '</optgroup>';
+    });
+    return html;
+  }
+
+  // ---------- render ----------
+  function render() {
+    var html = '';
+    html += '<div class="header-row">🏋️<h1 style="margin-left:6px">筋トレ記録</h1></div>';
+    html += '<p class="subtitle">重量と回数で、成長を数字で見る</p>';
+    if (ui.error) html += '<div class="error-banner">' + escapeHtml(ui.error) + '</div>';
+
+    html += '<div class="tabs">' +
+      tabBtn('log', '記録する') + tabBtn('splits', '分割項目') + tabBtn('bodypart', '部位') +
+      tabBtn('manageExercise', '種目管理') + tabBtn('manageBodyPart', '部位管理') +
+      '</div>';
+
+    if (ui.tab === 'log') html += renderLogTab();
+    else if (ui.tab === 'splits') html += renderSplitsTab();
+    else if (ui.tab === 'bodypart') html += renderBodyPartTab();
+    else if (ui.tab === 'manageExercise') html += renderManageExerciseTab();
+    else html += renderManageBodyPartTab();
+
+    html += '<details class="backup"><summary class="backup-summary">データのバックアップ・復元</summary>' +
+      '<p class="backup-desc">アプリを新しいバージョンに差し替えるときは、先にここでデータをコピーしておき、新しいバージョンで貼り付けて復元してください。</p>' +
+      '<div class="backup-actions"><button class="btn-primary" data-action="copy-backup">データをコピー</button></div>' +
+      '<textarea rows="3" placeholder="ここに以前コピーしたデータを貼り付け" data-field="restoreText">' + escapeHtml(draft.restoreText) + '</textarea>' +
+      '<div class="backup-actions" style="margin-top:8px"><button class="btn-primary" data-action="restore-backup">復元する</button></div>' +
+      '<button class="link-btn" style="margin-top:10px" data-action="reset-all">すべてのデータを削除</button>' +
+      '</details>';
+
+    if (ui.pendingConfirm) {
+      html += '<div class="confirm-overlay"><div class="confirm-card">' +
+        '<p class="confirm-message">' + escapeHtml(ui.pendingConfirm.message) + '</p>' +
+        '<div class="confirm-actions">' +
+        '<button class="confirm-cancel" data-action="confirm-no">キャンセル</button>' +
+        '<button class="confirm-delete" data-action="confirm-yes">削除する</button>' +
+        '</div></div></div>';
+    }
+
+    document.getElementById('app').innerHTML = html;
+  }
+
+  function tabBtn(key, label) {
+    return '<button class="tab-btn' + (ui.tab === key ? ' active' : '') + '" data-action="select-tab" data-tab="' + key + '">' + label + '</button>';
+  }
+
+  // ---------- 記録する ----------
+  function renderLogTab() {
+    var html = '';
+    if (state.exercises.length === 0) {
+      return '<p class="empty-text">まだ種目がありません。<br>「種目管理」タブから登録してください（先に「部位管理」で部位を作ってください）。<br>' +
+        '<button class="btn-primary" data-action="select-tab" data-tab="manageBodyPart">部位管理タブへ</button></p>';
+    }
+
+    html += '<label class="field-label">日付<input type="date" data-field="date" value="' + draft.date + '"></label>';
+
+    draft.blocks.forEach(function (b, bi) {
+      html += '<div class="block-card"><div class="block-header">' +
+        '<select data-field="block-exercise" data-block="' + bi + '" style="flex:1">' +
+        state.bodyParts.map(function (bp) {
+          var opts = state.exercises.filter(function (e) { return e.bodyPartId === bp.id; })
+            .map(function (e) { return '<option value="' + e.id + '"' + (b.exerciseId === e.id ? ' selected' : '') + '>' + escapeHtml(e.name) + '</option>'; }).join('');
+          return opts ? '<optgroup label="' + escapeHtml(bp.name) + '">' + opts + '</optgroup>' : '';
+        }).join('') +
+        '</select>' +
+        (draft.blocks.length > 1 ? '<button class="block-remove" data-action="remove-block" data-index="' + bi + '">✕</button>' : '') +
+        '</div>';
+      html += '<div class="set-rows-header"><span style="width:40px">セット</span><span style="flex:1">重量(kg)</span><span style="flex:1">回数</span><span style="width:28px"></span></div>';
+      b.sets.forEach(function (row, si) {
+        html += '<div class="set-row"><span class="set-index">' + (si + 1) + '</span>' +
+          '<input class="set-input" type="number" inputmode="decimal" placeholder="60" data-field="set-weight" data-block="' + bi + '" data-index="' + si + '" value="' + escapeHtml(row.weight) + '">' +
+          '<input class="set-input" type="number" inputmode="numeric" placeholder="10" data-field="set-reps" data-block="' + bi + '" data-index="' + si + '" value="' + escapeHtml(row.reps) + '">' +
+          '<button class="set-remove-btn" data-action="remove-set" data-block="' + bi + '" data-index="' + si + '" ' + (b.sets.length === 1 ? 'disabled' : '') + '>−</button></div>';
+      });
+      html += '<button class="add-set-btn" data-action="add-set" data-block="' + bi + '">＋ セットを追加</button></div>';
+    });
+
+    html += '<button class="add-block-btn" data-action="add-block">＋ 種目を追加</button>';
+    html += '<button class="save-btn" data-action="save-session">この日の記録を保存</button>';
+
+    var recentSessions = state.sessions.slice().sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 20);
+    html += '<div class="history-header" style="margin-top:18px">📖 <span class="history-title">履歴</span></div>';
+    if (recentSessions.length === 0) {
+      html += '<div class="empty-chart">まだ記録がありません</div>';
+    } else {
+      recentSessions.forEach(function (s) {
+        var sessionTotal = 0;
+        s.items.forEach(function (it) { sessionTotal += totalReps(it.sets); });
+        html += '<div class="session-card"><div class="session-top"><span class="session-date">' + formatDate(s.date) + '</span>' +
+          '<span class="session-total">合計 ' + sessionTotal + '回・' + s.items.length + '種目</span></div>';
+        s.items.forEach(function (it) {
+          var ex = exerciseById(it.exerciseId);
+          if (ui.editingItem && ui.editingItem.sessionId === s.id && ui.editingItem.itemId === it.id) {
+            html += '<div style="padding:6px 0"><div class="item-name" style="width:auto;margin-bottom:6px">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + '</div>' + renderItemEditForm() + '</div>';
+          } else {
+            html += '<div class="item-row"><span class="item-name">' + (ex ? escapeHtml(ex.name) : '(削除済み)') + '</span>' +
+              '<div class="set-chips">' + it.sets.map(function (st) { return '<span class="set-chip">' + st.weight + 'kg×' + st.reps + '</span>'; }).join('') + '</div>' +
+              '<button class="delete-btn" data-action="start-edit-item" data-session="' + s.id + '" data-item="' + it.id + '">✎</button>' +
+              '<button class="delete-btn" data-action="delete-session-item" data-session="' + s.id + '" data-item="' + it.id + '">✕</button></div>';
+          }
+        });
+        html += '<button class="link-btn" style="margin-top:8px" data-action="delete-session" data-id="' + s.id + '">この日の記録を全て削除</button></div>';
+      });
+    }
+    return html;
+  }
+
+  // ---------- 分割項目 ----------
+  function renderSplitsTab() {
+    if (ui.splitsView === 'members' || ui.splitsView === 'detail') {
+      var sp = splitById(ui.selectedSplitId);
+      if (!sp) { ui.splitsView = 'list'; return renderSplitsList(); }
+      if (ui.splitsView === 'members') return renderSplitMembers(sp);
+      var ex = exerciseById(ui.selectedExerciseId);
+      if (!ex) { ui.splitsView = 'members'; return renderSplitMembers(sp); }
+      return renderExerciseDetailShared(ex, '← ' + escapeHtml(sp.name) + 'の種目一覧', 'back-to-split-members');
+    }
+    return renderSplitsList();
+  }
+
+  function renderSplitsList() {
+    var html = '<div class="section-label">分割項目（自由に名前を付けて追加できます）</div>';
+    if (state.splits.length === 0) {
+      html += '<p class="empty-text">まだ分割項目がありません。下から追加してください（例：1、2、Day A など）。</p>';
+    } else {
+      state.splits.forEach(function (s) {
+        html += '<div class="list-card" data-action="open-split" data-id="' + s.id + '">' +
+          '<span class="list-card-name">' + escapeHtml(s.name) + '</span>' +
+          '<span class="list-card-sub">種目 ' + s.exerciseIds.length + '</span>' +
+          '<span class="list-card-arrow">›</span></div>';
+      });
+    }
+    html += '<div class="manage-add-box"><input placeholder="新しい分割名（例：1、Day A）" data-field="newSplitName" value="' + escapeHtml(draft.newSplitName) + '">' +
+      '<button class="btn-primary" data-action="add-split">追加</button></div>';
+    return html;
+  }
+
+  function renderSplitMembers(sp) {
+    var html = '<button class="back-link" data-action="back-to-splits-list">← 分割項目一覧</button>';
+    html += '<div class="header-row" style="margin-bottom:10px"><h1 style="font-size:19px">' + escapeHtml(sp.name) + '</h1></div>';
+
+    html += '<div class="section-label">この分割の種目</div>';
+    if (sp.exerciseIds.length === 0) {
+      html += '<p class="empty-text">まだ種目が入っていません。下から追加してください。</p>';
+    } else {
+      sp.exerciseIds.forEach(function (exId) {
+        var ex = exerciseById(exId);
+        if (!ex) return;
+        var exRows = itemsForExercise(ex.id);
+        var allSets = []; exRows.forEach(function (r) { allSets = allSets.concat(r.sets); });
+        var best1rm = bestE1RM(allSets);
+        html += '<div class="list-card" data-action="open-split-exercise" data-id="' + ex.id + '">' +
+          '<span class="list-card-name">' + escapeHtml(ex.name) + '</span>' +
+          '<span class="list-card-stat">' + (exRows.length > 0 ? best1rm.toFixed(1) + 'kg' : '記録なし') + '</span>' +
+          '<button class="list-card-del" data-action="remove-exercise-from-split" data-split="' + sp.id + '" data-id="' + ex.id + '">✕</button></div>';
+      });
+    }
+
+    var available = state.exercises.filter(function (e) { return sp.exerciseIds.indexOf(e.id) === -1; });
+    html += '<div class="add-to-split-box"><select data-field="addToSplitExerciseId">' + exerciseOptionsHtml(sp.exerciseIds) + '</select>' +
+      '<button class="btn-primary" data-action="add-exercise-to-split" data-split="' + sp.id + '">追加</button></div>';
+
+    html += '<button class="link-btn" data-action="delete-split" data-id="' + sp.id + '">この分割項目を削除</button>';
+    return html;
+  }
+
+  // ---------- 部位 ----------
+  function renderBodyPartTab() {
+    if (state.bodyParts.length === 0) {
+      return '<p class="empty-text">まだ部位がありません。<br>「部位管理」タブから、胸・背中・脚のように追加してください。<br>' +
+        '<button class="btn-primary" data-action="select-tab" data-tab="manageBodyPart">部位管理タブへ</button></p>';
+    }
+    if (ui.bodyPartView === 'exercises' || ui.bodyPartView === 'detail') {
+      var bp = bodyPartById(ui.selectedBodyPartId);
+      if (!bp) { ui.bodyPartView = 'list'; return renderBodyPartList(); }
+      if (ui.bodyPartView === 'exercises') return renderBodyPartExercises(bp);
+      var ex = exerciseById(ui.selectedExerciseId);
+      if (!ex) { ui.bodyPartView = 'exercises'; return renderBodyPartExercises(bp); }
+      return renderExerciseDetailShared(ex, '← ' + escapeHtml(bp.name) + 'の種目一覧', 'back-to-bodypart-exercises');
+    }
+    return renderBodyPartList();
+  }
+
+  function renderBodyPartList() {
+    var html = '<div class="section-label">部位を選ぶ</div>';
+    state.bodyParts.forEach(function (bp) {
+      var cnt = state.exercises.filter(function (e) { return e.bodyPartId === bp.id; }).length;
+      html += '<div class="list-card" data-action="open-bodypart" data-id="' + bp.id + '">' +
+        '<span class="list-card-name">' + escapeHtml(bp.name) + '</span>' +
+        '<span class="list-card-sub">種目 ' + cnt + '</span>' +
+        '<span class="list-card-arrow">›</span></div>';
+    });
+    return html;
+  }
+
+  function renderBodyPartExercises(bp) {
+    var html = '<button class="back-link" data-action="back-to-bodypart-list">← 部位一覧</button>';
+    var exs = state.exercises.filter(function (e) { return e.bodyPartId === bp.id; });
+    var rows = itemsForBodyPart(bp.id);
+
+    html += '<div class="header-row" style="margin-bottom:10px"><h1 style="font-size:19px">' + escapeHtml(bp.name) + '</h1></div>';
+
+    if (rows.length > 0) {
+      var sessionDates = {}; rows.forEach(function (r) { sessionDates[r.date] = true; });
+      html += '<div class="stats-row">' +
+        '<div class="stat-card"><div class="stat-label">記録日数</div><div class="stat-value">' + Object.keys(sessionDates).length + '</div></div>' +
+        '<div class="stat-card"><div class="stat-label">登録種目数</div><div class="stat-value">' + exs.length + '</div></div>' +
+        '</div>';
+    }
+
+    html += '<div class="section-label">種目</div>';
+    if (exs.length === 0) {
+      html += '<p class="empty-text">' + escapeHtml(bp.name) + 'の種目がまだありません。「種目管理」タブから追加できます。</p>';
+    } else {
+      exs.forEach(function (e) {
+        var exRows = itemsForExercise(e.id);
+        var allSets = []; exRows.forEach(function (r) { allSets = allSets.concat(r.sets); });
+        var best1rm = bestE1RM(allSets);
+        html += '<div class="list-card" data-action="open-bodypart-exercise" data-id="' + e.id + '">' +
+          '<span class="list-card-name">' + escapeHtml(e.name) + '</span>' +
+          '<span class="list-card-stat">' + (exRows.length > 0 ? best1rm.toFixed(1) + 'kg' : '記録なし') + '</span>' +
+          '<span class="list-card-arrow">›</span></div>';
+      });
+    }
+    return html;
+  }
+
+  // ---------- 種目管理 ----------
+  function renderManageExerciseTab() {
+    var html = '<div class="section-label">種目一覧</div>';
+    if (state.exercises.length === 0) {
+      html += '<p class="empty-text" style="padding:12px 8px">まだ種目がありません</p>';
+    } else {
+      state.bodyParts.forEach(function (bp) {
+        state.exercises.filter(function (e) { return e.bodyPartId === bp.id; }).forEach(function (e) {
+          html += '<div class="manage-row"><span class="manage-row-name">' + escapeHtml(e.name) + '</span>' +
+            '<span class="manage-row-badge">' + escapeHtml(bp.name) + '</span>' +
+            '<button class="delete-btn" data-action="delete-exercise" data-id="' + e.id + '">✕</button></div>';
+        });
+      });
+    }
+    if (state.bodyParts.length === 0) {
+      html += '<p class="empty-text" style="padding:12px 8px">先に「部位管理」タブで部位を追加してください</p>';
+    } else {
+      html += '<div class="manage-add-box"><input placeholder="新しい種目名（例：インクラインダンベルプレス）" data-field="manageNewExName" value="' + escapeHtml(draft.manageNewExName) + '">' +
+        '<select data-field="manageNewExBodyPartId"><option value="">部位</option>' +
+        state.bodyParts.map(function (bp) { return '<option value="' + bp.id + '"' + (draft.manageNewExBodyPartId === bp.id ? ' selected' : '') + '>' + escapeHtml(bp.name) + '</option>'; }).join('') +
+        '</select></div><button class="btn-primary" style="margin-top:8px;width:100%" data-action="add-exercise">種目を追加</button>';
+    }
+    return html;
+  }
+
+  // ---------- 部位管理 ----------
+  function renderManageBodyPartTab() {
+    var html = '<div class="section-label">部位一覧</div>';
+    if (state.bodyParts.length === 0) {
+      html += '<p class="empty-text" style="padding:12px 8px">まだ部位がありません</p>';
+    } else {
+      state.bodyParts.forEach(function (bp) {
+        var cnt = state.exercises.filter(function (e) { return e.bodyPartId === bp.id; }).length;
+        html += '<div class="manage-row"><span class="manage-row-name">' + escapeHtml(bp.name) + '</span>' +
+          '<span class="manage-row-badge">種目 ' + cnt + '</span>' +
+          '<button class="delete-btn" data-action="delete-bodypart" data-id="' + bp.id + '">✕</button></div>';
+      });
+    }
+    html += '<div class="manage-add-box"><input placeholder="新しい部位名（例：胸、背中、脚、肩）" data-field="manageNewBodyPartName" value="' + escapeHtml(draft.manageNewBodyPartName) + '">' +
+      '<button class="btn-primary" data-action="add-bodypart">追加</button></div>';
+    return html;
+  }
+
+  // ---------- events ----------
+  document.addEventListener('DOMContentLoaded', function () {
+    var app = document.getElementById('app');
+
+    app.addEventListener('input', function (e) {
+      var f = e.target.dataset.field;
+      if (!f) return;
+      if (f === 'date') draft.date = e.target.value;
+      else if (f === 'quick-date') draft.quickDate = e.target.value;
+      else if (f === 'newSplitName') draft.newSplitName = e.target.value;
+      else if (f === 'addToSplitExerciseId') draft.addToSplitExerciseId = e.target.value;
+      else if (f === 'manageNewBodyPartName') draft.manageNewBodyPartName = e.target.value;
+      else if (f === 'manageNewExName') draft.manageNewExName = e.target.value;
+      else if (f === 'manageNewExBodyPartId') draft.manageNewExBodyPartId = e.target.value;
+      else if (f === 'restoreText') draft.restoreText = e.target.value;
+      else if (f === 'block-exercise') draft.blocks[+e.target.dataset.block].exerciseId = e.target.value;
+      else if (f === 'set-weight') draft.blocks[+e.target.dataset.block].sets[+e.target.dataset.index].weight = e.target.value;
+      else if (f === 'set-reps') draft.blocks[+e.target.dataset.block].sets[+e.target.dataset.index].reps = e.target.value;
+      else if (f === 'quick-weight') draft.quickSets[+e.target.dataset.index].weight = e.target.value;
+      else if (f === 'quick-reps') draft.quickSets[+e.target.dataset.index].reps = e.target.value;
+      else if (f === 'edit-date') draft.editDate = e.target.value;
+      else if (f === 'edit-weight') draft.editSets[+e.target.dataset.index].weight = e.target.value;
+      else if (f === 'edit-reps') draft.editSets[+e.target.dataset.index].reps = e.target.value;
+    });
+
+    app.addEventListener('change', function (e) {
+      var f = e.target.dataset.field;
+      if (f === 'block-exercise') draft.blocks[+e.target.dataset.block].exerciseId = e.target.value;
+      if (f === 'manageNewExBodyPartId') draft.manageNewExBodyPartId = e.target.value;
+      if (f === 'addToSplitExerciseId') draft.addToSplitExerciseId = e.target.value;
+    });
+
+    app.addEventListener('click', function (e) {
+      var el = e.target.closest('[data-action]');
+      if (!el) return;
+      var action = el.dataset.action, id = el.dataset.id;
+      if (action === 'select-tab') { ui.tab = el.dataset.tab; render(); }
+      else if (action === 'add-block') addBlock();
+      else if (action === 'remove-block') removeBlock(+el.dataset.index);
+      else if (action === 'add-set') addSetInBlock(+el.dataset.block);
+      else if (action === 'remove-set') removeSetInBlock(+el.dataset.block, +el.dataset.index);
+      else if (action === 'save-session') saveSession();
+      else if (action === 'delete-session') deleteSession(id);
+      else if (action === 'delete-session-item') deleteSessionItem(el.dataset.session, el.dataset.item);
+      else if (action === 'start-edit-item') startEditItem(el.dataset.session, el.dataset.item);
+      else if (action === 'cancel-edit-item') cancelEditItem();
+      else if (action === 'add-edit-set') addEditSetRow();
+      else if (action === 'remove-edit-set') removeEditSetRow(+el.dataset.index);
+      else if (action === 'save-edit-item') saveEditItem();
+
+      else if (action === 'open-split') { ui.selectedSplitId = id; ui.splitsView = 'members'; render(); }
+      else if (action === 'back-to-splits-list') { ui.splitsView = 'list'; ui.selectedSplitId = null; render(); }
+      else if (action === 'open-split-exercise') { ui.selectedExerciseId = id; ui.splitsView = 'detail'; render(); }
+      else if (action === 'back-to-split-members') { ui.splitsView = 'members'; ui.selectedExerciseId = null; render(); }
+      else if (action === 'add-split') addSplit();
+      else if (action === 'delete-split') requestConfirm('この分割項目を削除します（種目自体は削除されません）。よろしいですか？', 'delete-split', id);
+      else if (action === 'add-exercise-to-split') addExerciseToSplit(el.dataset.split);
+      else if (action === 'remove-exercise-from-split') requestConfirm('この種目をこの分割から外します（種目自体は削除されません）。よろしいですか？', 'remove-exercise-from-split', id, el.dataset.split);
+
+      else if (action === 'open-bodypart') { ui.selectedBodyPartId = id; ui.bodyPartView = 'exercises'; render(); }
+      else if (action === 'back-to-bodypart-list') { ui.bodyPartView = 'list'; ui.selectedBodyPartId = null; render(); }
+      else if (action === 'open-bodypart-exercise') { ui.selectedExerciseId = id; ui.bodyPartView = 'detail'; render(); }
+      else if (action === 'back-to-bodypart-exercises') { ui.bodyPartView = 'exercises'; ui.selectedExerciseId = null; render(); }
+
+      else if (action === 'select-ex-metric') { ui.exMetric = el.dataset.metric; render(); }
+      else if (action === 'add-quick-set') addQuickSetRow();
+      else if (action === 'remove-quick-set') removeQuickSetRow(+el.dataset.index);
+      else if (action === 'save-quick-entry') saveQuickEntry();
+      else if (action === 'delete-exercise') requestConfirm('この種目と記録をすべて削除します。よろしいですか？', 'delete-exercise', id);
+
+      else if (action === 'add-exercise') addExercise();
+      else if (action === 'add-bodypart') addBodyPart();
+      else if (action === 'delete-bodypart') requestConfirm('この部位と、含まれる種目・記録をすべて削除します。よろしいですか？', 'delete-bodypart', id);
+
+      else if (action === 'copy-backup') copyBackup();
+      else if (action === 'restore-backup') restoreBackup();
+      else if (action === 'reset-all') requestConfirm('すべてのデータを削除します。元に戻せません。よろしいですか？', 'reset-all', null);
+      else if (action === 'confirm-yes') resolveConfirm(true);
+      else if (action === 'confirm-no') resolveConfirm(false);
+    });
+
+    load();
+    render();
+  });
+})();
+</script>
+</body>
+</html>
