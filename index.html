@@ -152,7 +152,9 @@
     manageNewExBodyPartId: '',
     editDate: '',
     editSets: [],
-    restoreText: ''
+    restoreText: '',
+    formUrl: '',
+    formEntryId: ''
   };
 
   var EX_METRICS = [
@@ -205,11 +207,41 @@
     } catch (e) { /* ignore */ }
   }
 
-  // ---------- automatic local backup file (once per day, on save) ----------
-  function maybeAutoBackup() {
+  // ---------- automatic backup (Google Form, or local file if not configured) ----------
+  var BACKUP_CONFIG_KEY = 'workout-tracker-backup-config';
+  var backupConfig = { formUrl: '', entryId: '' };
+  function loadBackupConfig() {
+    try {
+      var raw = localStorage.getItem(BACKUP_CONFIG_KEY);
+      if (raw) backupConfig = JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+  }
+  function saveBackupConfig() {
+    try { localStorage.setItem(BACKUP_CONFIG_KEY, JSON.stringify(backupConfig)); } catch (e) { /* ignore */ }
+  }
+  function sendBackupToGoogleForm(showResultToast) {
+    if (!backupConfig.formUrl || !backupConfig.entryId) return false;
+    try {
+      var body = backupConfig.entryId + '=' + encodeURIComponent(JSON.stringify(state));
+      fetch(backupConfig.formUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body
+      }).then(function () {
+        if (showResultToast) showToast('送信しました（スプレッドシートを確認してください）');
+      }).catch(function () {
+        if (showResultToast) showToast('送信に失敗しました。URLとIDを確認してください');
+      });
+      return true;
+    } catch (e) {
+      if (showResultToast) showToast('送信に失敗しました');
+      return false;
+    }
+  }
+  function downloadLocalBackupFile() {
     try {
       var today = todayISO();
-      if (localStorage.getItem('workout-tracker-last-backup') === today) return;
       var blob = new Blob([JSON.stringify(state)], { type: 'application/json' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
@@ -219,8 +251,28 @@
       a.click();
       document.body.removeChild(a);
       setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
-      localStorage.setItem('workout-tracker-last-backup', today);
-    } catch (e) { /* backup is best-effort; never block the main action */ }
+    } catch (e) { /* best-effort */ }
+  }
+  function maybeAutoBackup() {
+    var today = todayISO();
+    if (localStorage.getItem('workout-tracker-last-backup') === today) return;
+    if (backupConfig.formUrl && backupConfig.entryId) {
+      sendBackupToGoogleForm(false);
+    } else {
+      downloadLocalBackupFile();
+    }
+    try { localStorage.setItem('workout-tracker-last-backup', today); } catch (e) { /* ignore */ }
+  }
+  function saveBackupSettings() {
+    backupConfig.formUrl = draft.formUrl.trim();
+    backupConfig.entryId = draft.formEntryId.trim();
+    saveBackupConfig();
+    showToast('保存しました');
+    render();
+  }
+  function testBackupSend() {
+    if (!backupConfig.formUrl || !backupConfig.entryId) { showToast('先にURLとIDを保存してください'); return; }
+    sendBackupToGoogleForm(true);
   }
 
   function applyLoadedData(data) {
@@ -629,6 +681,12 @@
       '<div class="backup-actions"><button class="btn-primary" data-action="copy-backup">データをコピー</button></div>' +
       '<textarea rows="3" placeholder="ここに以前コピーしたデータを貼り付け" data-field="restoreText">' + escapeHtml(draft.restoreText) + '</textarea>' +
       '<div class="backup-actions" style="margin-top:8px"><button class="btn-primary" data-action="restore-backup">復元する</button></div>' +
+      '<p class="backup-desc" style="margin-top:18px;padding-top:14px;border-top:1px solid #262421">Googleフォームに接続すると、記録するたびに自動でスプレッドシートへバックアップされます（任意）。</p>' +
+      '<label class="field-label">フォーム送信先URL（…/formResponse）<input placeholder="https://docs.google.com/forms/d/e/xxxx/formResponse" data-field="formUrl" value="' + escapeHtml(draft.formUrl) + '"></label>' +
+      '<label class="field-label">Entry ID（entry.xxxxxxx）<input placeholder="entry.123456789" data-field="formEntryId" value="' + escapeHtml(draft.formEntryId) + '"></label>' +
+      '<div class="backup-actions"><button class="btn-primary" data-action="save-backup-settings">保存</button>' +
+      '<button class="btn-ghost" style="flex:1" data-action="test-backup-send">テスト送信</button></div>' +
+      (backupConfig.formUrl && backupConfig.entryId ? '<p class="backup-desc" style="color:#8CA07A">✓ 接続済み — 記録時に自動送信されます</p>' : '') +
       '<button class="link-btn" style="margin-top:10px" data-action="reset-all">すべてのデータを削除</button>' +
       '</details>';
 
@@ -887,6 +945,8 @@
       else if (f === 'manageNewExName') draft.manageNewExName = e.target.value;
       else if (f === 'manageNewExBodyPartId') draft.manageNewExBodyPartId = e.target.value;
       else if (f === 'restoreText') draft.restoreText = e.target.value;
+      else if (f === 'formUrl') draft.formUrl = e.target.value;
+      else if (f === 'formEntryId') draft.formEntryId = e.target.value;
       else if (f === 'block-exercise') draft.blocks[+e.target.dataset.block].exerciseId = e.target.value;
       else if (f === 'set-weight') draft.blocks[+e.target.dataset.block].sets[+e.target.dataset.index].weight = e.target.value;
       else if (f === 'set-reps') draft.blocks[+e.target.dataset.block].sets[+e.target.dataset.index].reps = e.target.value;
@@ -948,11 +1008,16 @@
 
       else if (action === 'copy-backup') copyBackup();
       else if (action === 'restore-backup') restoreBackup();
+      else if (action === 'save-backup-settings') saveBackupSettings();
+      else if (action === 'test-backup-send') testBackupSend();
       else if (action === 'reset-all') requestConfirm('すべてのデータを削除します。元に戻せません。よろしいですか？', 'reset-all', null);
       else if (action === 'confirm-yes') resolveConfirm(true);
       else if (action === 'confirm-no') resolveConfirm(false);
     });
 
+    loadBackupConfig();
+    draft.formUrl = backupConfig.formUrl;
+    draft.formEntryId = backupConfig.entryId;
     load();
     render();
   });
