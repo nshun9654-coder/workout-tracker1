@@ -91,7 +91,8 @@
   .list-card-sub { font-size: 11.5px; color: #8B8680; }
   .list-card-stat { font-family: 'Oswald', sans-serif; font-size: 13px; color: #C89B3C; }
   .set-count-ctl { display: flex; align-items: center; gap: 2px; }
-  .set-count-label { font-size: 12px; color: #B8B2A7; min-width: 44px; text-align: center; }
+  .set-count-input { width: 44px; padding: 6px 2px; text-align: center; font-size: 16px; }
+  .set-count-label { font-size: 12px; color: #B8B2A7; margin: 0 2px; }
   .set-count-ctl .list-card-del { font-size: 16px; padding: 4px 7px; color: #8B8680; }
   .list-card-arrow { color: #6B6660; font-size: 15px; }
   .list-card-del { border: none; background: transparent; color: #5A5650; cursor: pointer; font-size: 13px; padding: 2px 4px; }
@@ -844,9 +845,7 @@
           var best1rm = bestE1RM(allSets);
           html += '<div class="list-card" data-action="open-split-exercise" data-id="' + ex.id + '">' +
             '<span class="list-card-name">' + escapeHtml(ex.name) + (ex.memo ? ' 📝' : '') + '</span>' +
-            '<span class="set-count-ctl"><button class="list-card-del" data-action="split-sets-dec" data-split="' + sp.id + '" data-id="' + ex.id + '">−</button>' +
-            '<span class="set-count-label">' + ((sp.setCounts && sp.setCounts[ex.id]) || 3) + 'セット</span>' +
-            '<button class="list-card-del" data-action="split-sets-inc" data-split="' + sp.id + '" data-id="' + ex.id + '">＋</button></span>' +
+            '<span class="set-count-ctl"><input class="set-count-input" type="number" inputmode="numeric" min="1" max="20" data-field="split-sets" data-split="' + sp.id + '" data-id="' + ex.id + '" value="' + ((sp.setCounts && sp.setCounts[ex.id]) || 3) + '"><span class="set-count-label">セット</span></span>' +
             '<span class="list-card-stat">' + (exRows.length > 0 ? best1rm.toFixed(1) + 'kg' : '記録なし') + '</span>' +
             '<button class="list-card-del" data-action="remove-exercise-from-split" data-split="' + sp.id + '" data-id="' + ex.id + '">✕</button></div>';
         });
@@ -996,12 +995,24 @@
 
     app.addEventListener('change', function (e) {
       var f = e.target.dataset.field;
+      if (f === 'split-sets') {
+        var sps2 = splitById(e.target.dataset.split);
+        if (sps2) {
+          var n = Math.round(parseFloat(e.target.value));
+          if (!(n >= 1)) n = 3;
+          sps2.setCounts = sps2.setCounts || {};
+          sps2.setCounts[e.target.dataset.id] = Math.min(20, n);
+          save(); render();
+        }
+        return;
+      }
       if (f === 'block-exercise') draft.blocks[+e.target.dataset.block].exerciseId = e.target.value;
       if (f === 'manageNewExBodyPartId') draft.manageNewExBodyPartId = e.target.value;
       if (f === 'addToSplitExerciseId') draft.addToSplitExerciseId = e.target.value;
     });
 
     app.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('.set-count-input')) return;
       var el = e.target.closest('[data-action]');
       if (!el) return;
       var action = el.dataset.action, id = el.dataset.id;
