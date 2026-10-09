@@ -143,6 +143,7 @@
     error: null,
     pendingConfirm: null, // { message, action, id }
     editingItem: null, // { sessionId, itemId }
+    recordHistN: 3, exHistN: 3,
     expandedSessions: {} // { [sessionId]: true }
   };
   var draft = {
@@ -619,6 +620,10 @@
     });
     html += '</div>' + buildChartSVG(chartPoints) + '</div>';
 
+    html += '<div class="block-card"><div class="section-label" style="margin-bottom:6px">📝 メモ（フォーム・コツ・設定など）</div>' +
+      '<textarea rows="3" style="font-size:16px" placeholder="例：シート角度3段目、肘を締める、グリップ幅は肩幅+こぶし1個" data-field="exercise-memo" data-id="' + ex.id + '">' + escapeHtml(ex.memo || '') + '</textarea>' +
+      '<div class="section-label" id="memo-status" style="margin:4px 0 0">自動で保存されます</div></div>';
+
     html += '<div class="block-card"><div class="section-label" style="margin-bottom:10px">この種目を記録する</div>' +
       '<label class="field-label">日付<input type="date" data-field="quick-date" value="' + draft.quickDate + '"></label>' +
       '<div class="set-rows-header"><span style="width:40px">セット</span><span style="flex:1">重量(kg)</span><span style="flex:1">回数</span><span style="width:28px"></span></div>';
@@ -635,7 +640,8 @@
     if (rows.length === 0) {
       html += '<div class="empty-chart">まだ記録がありません</div>';
     } else {
-      rows.slice().reverse().forEach(function (r) {
+      var exAll = rows.slice().reverse();
+      exAll.slice(0, ui.exHistN).forEach(function (r) {
         if (ui.editingItem && ui.editingItem.sessionId === r.sessionId && ui.editingItem.itemId === r.itemId) {
           html += renderItemEditForm();
         } else {
@@ -645,6 +651,7 @@
             '<div class="set-chips">' + r.sets.map(function (s) { return '<span class="set-chip">' + s.weight + 'kg×' + s.reps + '</span>'; }).join('') + '</div></div>';
         }
       });
+      if (exAll.length > ui.exHistN) html += '<button class="link-btn" data-action="more-ex-history">続きを見る（残り' + (exAll.length - ui.exHistN) + '件）</button>';
     }
     html += '<button class="link-btn" data-action="delete-exercise" data-id="' + ex.id + '">この種目を削除</button>';
     return html;
@@ -739,7 +746,8 @@
     html += '<button class="add-block-btn" data-action="add-block">＋ 種目を追加</button>';
     html += '<button class="save-btn" data-action="save-session">この日の記録を保存</button>';
 
-    var recentSessions = state.sessions.slice().sort(function (a, b) { return b.date.localeCompare(a.date); }).slice(0, 20);
+    var recentSessions = state.sessions.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+    var allRecent = recentSessions; recentSessions = recentSessions.slice(0, ui.recordHistN);
     html += '<div class="history-header" style="margin-top:18px">📖 <span class="history-title">履歴</span></div>';
     if (recentSessions.length === 0) {
       html += '<div class="empty-chart">まだ記録がありません</div>';
@@ -771,6 +779,7 @@
         }
         html += '</div>';
       });
+      if (allRecent.length > ui.recordHistN) html += '<button class="link-btn" data-action="more-record-history">続きを見る（残り' + (allRecent.length - ui.recordHistN) + '件）</button>';
     }
     return html;
   }
@@ -813,16 +822,28 @@
     if (sp.exerciseIds.length === 0) {
       html += '<p class="empty-text">まだ種目が入っていません。下から追加してください。</p>';
     } else {
+      var groups = [];
+      state.bodyParts.forEach(function (bp) { groups.push({ name: bp.name, id: bp.id, items: [] }); });
+      var other = { name: '部位未設定', id: null, items: [] };
       sp.exerciseIds.forEach(function (exId) {
         var ex = exerciseById(exId);
         if (!ex) return;
-        var exRows = itemsForExercise(ex.id);
-        var allSets = []; exRows.forEach(function (r) { allSets = allSets.concat(r.sets); });
-        var best1rm = bestE1RM(allSets);
-        html += '<div class="list-card" data-action="open-split-exercise" data-id="' + ex.id + '">' +
-          '<span class="list-card-name">' + escapeHtml(ex.name) + '</span>' +
-          '<span class="list-card-stat">' + (exRows.length > 0 ? best1rm.toFixed(1) + 'kg' : '記録なし') + '</span>' +
-          '<button class="list-card-del" data-action="remove-exercise-from-split" data-split="' + sp.id + '" data-id="' + ex.id + '">✕</button></div>';
+        var g = groups.find(function (x) { return x.id === ex.bodyPartId; });
+        (g || other).items.push(ex);
+      });
+      groups.push(other);
+      groups.forEach(function (g) {
+        if (g.items.length === 0) return;
+        html += '<div class="section-label" style="margin-top:12px;font-weight:600">' + escapeHtml(g.name) + '</div>';
+        g.items.forEach(function (ex) {
+          var exRows = itemsForExercise(ex.id);
+          var allSets = []; exRows.forEach(function (r) { allSets = allSets.concat(r.sets); });
+          var best1rm = bestE1RM(allSets);
+          html += '<div class="list-card" data-action="open-split-exercise" data-id="' + ex.id + '">' +
+            '<span class="list-card-name">' + escapeHtml(ex.name) + (ex.memo ? ' 📝' : '') + '</span>' +
+            '<span class="list-card-stat">' + (exRows.length > 0 ? best1rm.toFixed(1) + 'kg' : '記録なし') + '</span>' +
+            '<button class="list-card-del" data-action="remove-exercise-from-split" data-split="' + sp.id + '" data-id="' + ex.id + '">✕</button></div>';
+        });
       });
     }
 
@@ -958,6 +979,10 @@
       else if (f === 'set-reps') draft.blocks[+e.target.dataset.block].sets[+e.target.dataset.index].reps = e.target.value;
       else if (f === 'quick-weight') draft.quickSets[+e.target.dataset.index].weight = e.target.value;
       else if (f === 'quick-reps') draft.quickSets[+e.target.dataset.index].reps = e.target.value;
+      else if (f === 'exercise-memo') {
+        var mex = exerciseById(e.target.dataset.id);
+        if (mex) { mex.memo = e.target.value; save(); var st = document.getElementById('memo-status'); if (st) st.textContent = '✓ 保存しました'; }
+      }
       else if (f === 'edit-date') draft.editDate = e.target.value;
       else if (f === 'edit-weight') draft.editSets[+e.target.dataset.index].weight = e.target.value;
       else if (f === 'edit-reps') draft.editSets[+e.target.dataset.index].reps = e.target.value;
@@ -982,6 +1007,8 @@
       else if (action === 'save-session') saveSession();
       else if (action === 'delete-session') deleteSession(id);
       else if (action === 'delete-session-item') deleteSessionItem(el.dataset.session, el.dataset.item);
+      else if (action === 'more-record-history') { ui.recordHistN += 3; render(); }
+      else if (action === 'more-ex-history') { ui.exHistN += 3; render(); }
       else if (action === 'toggle-session-history') { ui.expandedSessions[id] = !ui.expandedSessions[id]; render(); }
       else if (action === 'start-edit-item') startEditItem(el.dataset.session, el.dataset.item);
       else if (action === 'cancel-edit-item') cancelEditItem();
@@ -991,7 +1018,7 @@
 
       else if (action === 'open-split') { ui.selectedSplitId = id; ui.splitsView = 'members'; render(); }
       else if (action === 'back-to-splits-list') { ui.splitsView = 'list'; ui.selectedSplitId = null; render(); }
-      else if (action === 'open-split-exercise') { ui.selectedExerciseId = id; ui.splitsView = 'detail'; render(); }
+      else if (action === 'open-split-exercise') { ui.selectedExerciseId = id; ui.exHistN = 3; ui.splitsView = 'detail'; render(); }
       else if (action === 'back-to-split-members') { ui.splitsView = 'members'; ui.selectedExerciseId = null; render(); }
       else if (action === 'add-split') addSplit();
       else if (action === 'delete-split') requestConfirm('この分割項目を削除します（種目自体は削除されません）。よろしいですか？', 'delete-split', id);
@@ -1000,7 +1027,7 @@
 
       else if (action === 'open-bodypart') { ui.selectedBodyPartId = id; ui.bodyPartView = 'exercises'; render(); }
       else if (action === 'back-to-bodypart-list') { ui.bodyPartView = 'list'; ui.selectedBodyPartId = null; render(); }
-      else if (action === 'open-bodypart-exercise') { ui.selectedExerciseId = id; ui.bodyPartView = 'detail'; render(); }
+      else if (action === 'open-bodypart-exercise') { ui.selectedExerciseId = id; ui.exHistN = 3; ui.bodyPartView = 'detail'; render(); }
       else if (action === 'back-to-bodypart-exercises') { ui.bodyPartView = 'exercises'; ui.selectedExerciseId = null; render(); }
 
       else if (action === 'select-ex-metric') { ui.exMetric = el.dataset.metric; render(); }
